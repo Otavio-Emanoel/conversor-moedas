@@ -19,9 +19,11 @@ public class Main {
 
             double taxaUSD = extrairTaxa(respostaJson, "USD");
             double taxaEUR = extrairTaxa(respostaJson, "EUR");
+            double taxaGBP = extrairTaxa(respostaJson, "GBP");
 
             exibirResultado("USD", taxaUSD, valorBrl);
             exibirResultado("EUR", taxaEUR, valorBrl);
+            exibirResultado("GBP", taxaGBP, valorBrl);
 
         } catch (Exception e) {
             System.out.println("Erro ao converter moeda.");
