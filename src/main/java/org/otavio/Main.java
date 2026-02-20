@@ -6,50 +6,57 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
+
+    private static final String API_URL = "https://open.er-api.com/v6/latest/BRL";
+
     public static void main(String[] args) {
-        try {
-            Scanner scanner = new Scanner(System.in).useLocale(Locale.US);
-            System.out.print("Digite o valor que deseja converter em reais para dolar e euro: ");
+        try (Scanner scanner = new Scanner(System.in).useLocale(Locale.US)) {
+
+            System.out.print("Digite o valor em reais (BRL): ");
             double valorBrl = scanner.nextDouble();
 
-            // buscar a taxa de cambio
+            String respostaJson = buscarTaxasCambio();
 
-            String urlStr = "https://open.er-api.com/v6/latest/BRL";
-            URL url = new URL(urlStr);
-            HttpURLConnection request = (HttpURLConnection) url.openConnection();
-            request.connect();
+            double taxaUSD = extrairTaxa(respostaJson, "USD");
+            double taxaEUR = extrairTaxa(respostaJson, "EUR");
 
-            Scanner scUrl = new Scanner(url.openStream());
-            String inline = "";
-            while(scUrl.hasNext()){
-                inline += scUrl.nextLine();
-            }
-            scUrl.close();
-
-            for (int i = 0; i<2;i++) {
-                if (i == 0) {
-                    String keyToFind = "\"USD\":";
-                    int index = inline.indexOf(keyToFind);
-                    String substring = inline.substring(index + keyToFind.length());
-                    String rateStr = substring.substring(0, substring.indexOf(","));
-                    double taxaUSD = Double.parseDouble(rateStr);
-                    double valorFinal = valorBrl * taxaUSD;
-                    System.out.println("Taxa BRL/USD: $ " + taxaUSD);
-                    System.out.println("Valor final: R$ " + valorFinal);
-                } else if (i == 1) {
-                    String keyToFind = "\"EUR\":";
-                    int index = inline.indexOf(keyToFind);
-                    String substring = inline.substring(index + keyToFind.length());
-                    String rateStr = substring.substring(0, substring.indexOf(","));
-                    double taxaUSD = Double.parseDouble(rateStr);
-                    double valorFinal = valorBrl * taxaUSD;
-                    System.out.println("Taxa BRL/EURO: $ " + taxaUSD);
-                    System.out.println("Valor final: R$ " + valorFinal);
-                }
-            }
+            exibirResultado("USD", taxaUSD, valorBrl);
+            exibirResultado("EUR", taxaEUR, valorBrl);
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println("Erro ao converter moeda.");
+            e.printStackTrace();
         }
+    }
+
+    private static String buscarTaxasCambio() throws Exception {
+        URL url = new URL(API_URL);
+        HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
+        conexao.connect();
+
+        StringBuilder resposta = new StringBuilder();
+        try (Scanner sc = new Scanner(url.openStream())) {
+            while (sc.hasNext()) {
+                resposta.append(sc.nextLine());
+            }
+        }
+
+        return resposta.toString();
+    }
+
+    private static double extrairTaxa(String json, String moeda) {
+        String chave = "\"" + moeda + "\":";
+        int index = json.indexOf(chave);
+
+        String substring = json.substring(index + chave.length());
+        String valor = substring.substring(0, substring.indexOf(","));
+
+        return Double.parseDouble(valor);
+    }
+
+    private static void exibirResultado(String moeda, double taxa, double valorBrl) {
+        double valorConvertido = valorBrl * taxa;
+        System.out.println("\nTaxa BRL/" + moeda + ": " + taxa);
+        System.out.println("Valor convertido: " + valorConvertido + " " + moeda);
     }
 }
