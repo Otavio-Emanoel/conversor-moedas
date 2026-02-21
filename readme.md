@@ -42,3 +42,62 @@ As taxas de câmbio são obtidas **em tempo real** através de uma API pública 
 ---
 
 ## 📂 Estrutura do Projeto
+
+src/
+└── org/
+└── otavio/
+└── Main.java
+
+
+---
+
+## ▶️ Como Executar
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/nome-do-repositorio.git
+   ```
+
+---
+
+## ▶️ Como Executar
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/nome-do-repositorio.git
+```
+
+Acesse a pasta do projeto:
+```bash
+cd nome-do-repositorio
+```
+
+Compile o projeto:
+```bash
+javac src/org/otavio/Main.java
+```
+
+Execute:
+```bash
+java org.otavio.Main
+```
+
+## 🧪 Exemplo de Uso
+```Digite o valor em reais (BRL): 100```
+
+Taxa BRL/USD: 0.20
+Valor convertido: 20.00 USD
+
+Taxa BRL/EUR: 0.18
+Valor convertido: 18.00 EUR
+
+Taxa BRL/GBP: 0.15
+Valor convertido: 15.00 GBP
+
+## 📚 O que aprendi neste projeto
+
+- Consumo de APIs REST em Java
+- Leitura de dados via terminal
+- Manipulação de Strings para extração de dados
+- Organização de código com métodos
+- Boas práticas iniciais em Java
